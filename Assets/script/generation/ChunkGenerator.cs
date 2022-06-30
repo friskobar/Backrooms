@@ -7,7 +7,8 @@ public class ChunkGenerator : MonoBehaviour
     [Header("References")]
     [SerializeField] Transform ppos;
     [SerializeField] LayerMask groundLayer;
-    [SerializeField] GameObject[] Rooms;
+    [SerializeField] GameObject[] crooms;
+    [SerializeField] GameObject[] rrooms;
 
     [Header("Variables")]
     [SerializeField] const int chunkSize = 32;
@@ -26,12 +27,30 @@ public class ChunkGenerator : MonoBehaviour
     {
         curchunk = FindPlayerCurChunk();
         GenerateChunks();
+        DeleteFarAwayChunks();
         lastChunk = curchunk;
+    }
+
+    void DeleteFarAwayChunks()
+    {
+        float dist;
+        for (int i = 0; i < chunks.Count; i++)
+        {
+            dist = Vector3.Distance(ppos.position, chunks[i].transform.position);
+            if (dist > chunkSize*1.5f * viewDist/2)
+            {
+                Destroy(chunks[i]);
+                chunks.Remove(chunks[i]);
+            }
+        }
     }
 
     void GenerateChunks()
     {
-        var room = Rooms[Random.Range(0, Rooms.Length)];
+        var rar = Random.Range(0.0f, 1.0f) > .8f;
+        GameObject room;
+        if(rar) room = rrooms[Random.Range(0, rrooms.Length)];
+        else room = crooms[Random.Range(0, crooms.Length)];
         for (int x = (int)curchunk.x - (int)viewDist/2; x < curchunk.x + viewDist/2; x++)
         {
             for (int y = (int)curchunk.y - (int)viewDist/2; y < curchunk.y + viewDist/2; y++)
@@ -41,7 +60,9 @@ public class ChunkGenerator : MonoBehaviour
                     var chunk = Instantiate(room, new Vector3(chunkSize * x , 0, chunkSize * y + chunkSize), new Quaternion(0, 0, 0, 0));
                     chunks.Add(chunk);
                 }
-                room = Rooms[Random.Range(0, Rooms.Length)];
+                rar = Random.Range(0.0f, 1.0f) > .8f;
+                if(rar) room = rrooms[Random.Range(0, rrooms.Length)];
+                else room = crooms[Random.Range(0, crooms.Length)];
             }
         }
     }

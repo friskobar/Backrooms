@@ -1,11 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
     [Tooltip("Player Camera.")]
-    [SerializeField] new Transform camera;
+    [SerializeField] new Camera camera;
+    [SerializeField] float FOV;
     [Tooltip("Physics Simulation.")]
     [SerializeField] Rigidbody rb;
     [Tooltip("Player Direction.")]
@@ -20,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     float z;
     [Header("Running")]
     [Tooltip("The time the player can keep running.")]
+    [SerializeField] float runFOV;
     [SerializeField] float stamina = 100f;
     [SerializeField] float sDecrease = .125f;
     [SerializeField] float sIncrease = .50f;
@@ -46,6 +50,9 @@ public class PlayerMovement : MonoBehaviour
     [Range(0.1f, 9f)][SerializeField] float sensitivity = 4f;
 	[Tooltip("Limits vertical camera rotation. Prevents the flipping that happens when rotation goes above 90.")]
 	[Range(0f, 90f)][SerializeField] float yRotationLimit = 88f;
+    [Header("Rendering")]
+    [SerializeField] VolumeProfile vol;
+    LensDistortion ld;
 
 	Vector2 rotation = Vector2.zero;
 
@@ -54,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
         //set cursor invisible and locked
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        vol.TryGet<LensDistortion>(out ld);
     }
 
     void Update()
@@ -63,6 +71,21 @@ public class PlayerMovement : MonoBehaviour
         isGrounded();
         camMov();
         GUIManager();
+        PostProcessingManager();
+    }
+
+    void PostProcessingManager()
+    {
+        if(Input.GetAxisRaw("LShift") >= 1 && running)
+        {
+            ld.intensity.value = Mathf.Lerp(ld.intensity.value, -.2f, .2f);
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, runFOV, .2f);
+        }
+        else
+        {
+            ld.intensity.value = Mathf.Lerp(ld.intensity.value, 0, .2f);
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, FOV, .2f);
+        }
     }
     void GUIManager()
     {
@@ -95,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
 
         //change rotation
 		orientation.localRotation = xQuat;
-        camera.localRotation = yQuat;
+        camera.transform.localRotation = yQuat;
     }
 
     void Movement()
