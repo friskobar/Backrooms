@@ -174,6 +174,11 @@ MonoBehaviour:
   - {fileID: 1609058099657167290, guid: 4a5878a9da0713244b9d36d7746fdf6a, type: 3}
   - {fileID: 7393750996857418300, guid: 7270e126252440845b16f34c11a528a2, type: 3}
   - {fileID: 1609058099657167290, guid: b998106182f84164181cae34eb6c2e67, type: 3}
+  - {fileID: 1609058099657167290, guid: 4c426629e07dcf947bc195bb2a8928b0, type: 3}
+  - {fileID: 1609058099657167290, guid: 0b3a8b0acd5812240b48853edf85375d, type: 3}
+  - {fileID: 1609058099657167290, guid: e10bda67738c93f4f958d9bbe5af4c7e, type: 3}
+  - {fileID: 1609058099657167290, guid: 483337e61ecd76643adc25eeb5ad5b05, type: 3}
+  - {fileID: 1609058099657167290, guid: 8003c774a86d8af4485e3c8a93c760ce, type: 3}
   viewDist: 6
   chunks: []
   curchunk: {x: 0, y: 0}
@@ -1389,8 +1394,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3408472350102657623, guid: be827918e084b6c4ea2276ecd25535d3, type: 3}
+      propertyPath: sDecrease
+      value: 0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408472350102657623, guid: be827918e084b6c4ea2276ecd25535d3, type: 3}
       propertyPath: sIncrease
-      value: 0.05
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 3408472350553657054, guid: be827918e084b6c4ea2276ecd25535d3, type: 3}
       propertyPath: m_Name
